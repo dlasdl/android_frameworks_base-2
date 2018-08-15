@@ -1369,6 +1369,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(DevicePolicyManager.ACTION_SHOW_DEVICE_MONITORING_DIALOG);
         filter.addAction(NotificationPanelViewController.CANCEL_NOTIFICATION_PULSE_ACTION);
+        filter.addAction("com.android.systemui.ACTION_DISMISS_KEYGUARD");
         mBroadcastDispatcher.registerReceiver(mBroadcastReceiver, filter, null, UserHandle.ALL);
     }
 
@@ -3255,6 +3256,12 @@ public class StatusBar extends SystemUI implements DemoMode,
             }
             else if (NotificationPanelViewController.CANCEL_NOTIFICATION_PULSE_ACTION.equals(action)) {
                 mNotificationPanelViewController.stopNotificationPulse();
+            }
+            else if ("com.android.systemui.ACTION_DISMISS_KEYGUARD".equals(action)) {
+                if (intent.hasExtra("launch")) {
+                    Intent launchIntent = (Intent) intent.getParcelableExtra("launch");
+                    startActivityDismissingKeyguard(launchIntent, true, true);
+                }
             }
         }
     };
